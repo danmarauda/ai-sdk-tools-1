@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { GeistSans } from "geist/font/sans";
-import localFont from "next/font/local";
-import { Providers } from "@/components/providers";
-
-const departureFont = localFont({
-  src: "./DepartureMono-Regular.woff2",
-  variable: "--font-departure",
-});
 
 export const metadata: Metadata = {
   title: "AI Burn Rate Analyzer",
@@ -22,10 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${GeistSans.className} ${departureFont.variable} antialiased min-h-screen`}
-      >
-        <Providers>{children}</Providers>
+      <body className="antialiased min-h-screen" suppressHydrationWarning>
+        {children}
       </body>
     </html>
   );

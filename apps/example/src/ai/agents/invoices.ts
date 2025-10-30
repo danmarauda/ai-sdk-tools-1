@@ -5,35 +5,26 @@ import {
   listInvoicesTool,
   updateInvoiceTool,
 } from "../tools/invoices";
-import { createAgent, formatContextForLLM } from "./shared";
+import { COMMON_AGENT_RULES, createAgent, formatContextForLLM } from "./shared";
 
 export const invoicesAgent = createAgent({
   name: "invoices",
   model: openai("gpt-4o-mini"),
+  temperature: 0.3,
   instructions: (
     ctx,
-  ) => `You are an invoice management specialist for ${ctx.companyName}.
+  ) => `You are an invoice management specialist for ${ctx.companyName}. Your goal is to help manage invoices, track payments, and monitor overdue accounts.
 
-CRITICAL RULES:
-1. ALWAYS use tools to get/create/update invoice data
-2. Present invoice information clearly with key details (amount, status, due date)
-3. Use clear status labels (Paid, Overdue, Pending)
+<background-data>
+${formatContextForLLM(ctx)}
+</background-data>
 
-${formatContextForLLM(ctx)}`,
+${COMMON_AGENT_RULES}`,
   tools: {
     listInvoices: listInvoicesTool,
     getInvoice: getInvoiceTool,
     createInvoice: createInvoiceTool,
     updateInvoice: updateInvoiceTool,
   },
-  matchOn: [
-    "invoice",
-    "bill",
-    "create invoice",
-    "send invoice",
-    "unpaid invoice",
-    "paid invoice",
-    /create.*invoice/i,
-  ],
   maxTurns: 5,
 });

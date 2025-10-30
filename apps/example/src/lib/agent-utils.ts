@@ -8,26 +8,26 @@ export const getStatusMessage = (status?: AgentStatus | null) => {
 
   const { agent, status: state } = status;
 
-  if (state === "executing") {
-    const messages: Record<
-      Exclude<AgentStatus["agent"], "orchestrator" | "general">,
-      string
-    > = {
-      reports: "Generating financial reports...",
-      transactions: "Fetching transactions...",
-      invoices: "Managing invoices...",
-      timeTracking: "Processing time entries...",
-      customers: "Accessing customer data...",
-      analytics: "Running analytics...",
-      operations: "Processing request...",
-      research: "Searching the web...",
-    };
-
-    return messages[agent as keyof typeof messages];
+  if (state === "routing") {
+    return "Thinking...";
   }
 
-  if (state === "completing") {
-    return "Completing task...";
+  if (state === "executing") {
+    const messages: Record<AgentStatus["agent"], string> = {
+      triage: "Thinking...",
+      orchestrator: "Coordinating your request...",
+      general: "Getting information for you...",
+      reports: "Generating your financial reports...",
+      transactions: "Retrieving your transaction history...",
+      invoices: "Checking your invoice status...",
+      timeTracking: "Reviewing your time entries...",
+      customers: "Looking up customer information...",
+      analytics: "Running business intelligence analysis...",
+      operations: "Accessing your account data...",
+      research: "Researching and analyzing your options...",
+    };
+
+    return messages[agent];
   }
 
   return null;
@@ -39,57 +39,60 @@ export const getToolMessage = (toolName: string | null) => {
 
   const toolMessages: Record<string, string> = {
     // Reports tools
-    revenue: "Calculating revenue metrics...",
-    profitLoss: "Generating profit & loss statement...",
-    cashFlow: "Analyzing cash flow...",
-    balanceSheet: "Preparing balance sheet...",
-    expenses: "Breaking down expenses...",
-    burnRate: "Calculating burn rate...",
-    runway: "Projecting runway...",
-    spending: "Analyzing spending patterns...",
-    taxSummary: "Generating tax summary...",
+    revenue: "Calculating your revenue metrics...",
+    profitLoss: "Computing your profit & loss statement...",
+    cashFlow: "Analyzing your cash flow patterns...",
+    balanceSheet: "Building your balance sheet...",
+    expenses: "Categorizing your expenses...",
+    burnRate: "Computing your monthly burn rate...",
+    runway: "Calculating your cash runway...",
+    spending: "Analyzing your spending trends...",
+    taxSummary: "Preparing your tax summary...",
 
     // Analytics tools
-    businessHealth: "Analyzing business health...",
-    cashFlowForecast: "Forecasting cash flow...",
-    stressTest: "Running stress test scenarios...",
+    businessHealth: "Computing your business health score...",
+    cashFlowForecast: "Projecting your future cash flow...",
+    stressTest: "Running financial stress scenarios...",
 
     // Customer tools
-    getCustomer: "Retrieving customer data...",
-    createCustomer: "Creating customer record...",
-    updateCustomer: "Updating customer information...",
+    getCustomer: "Retrieving customer information...",
+    createCustomer: "Setting up new customer profile...",
+    updateCustomer: "Updating customer details...",
     profitabilityAnalysis: "Analyzing customer profitability...",
 
     // Invoice tools
-    listInvoices: "Fetching invoices...",
-    getInvoice: "Retrieving invoice details...",
-    createInvoice: "Creating invoice...",
-    updateInvoice: "Updating invoice...",
+    listInvoices: "Retrieving your invoices...",
+    getInvoice: "Loading invoice details...",
+    createInvoice: "Creating your invoice...",
+    updateInvoice: "Updating invoice information...",
 
     // Transaction tools
-    listTransactions: "Fetching transactions...",
-    getTransaction: "Retrieving transaction details...",
+    listTransactions: "Retrieving your transactions...",
+    getTransaction: "Loading transaction details...",
 
     // Time tracking tools
-    startTimer: "Starting timer...",
-    stopTimer: "Stopping timer...",
-    getTimeEntries: "Fetching time entries...",
-    createTimeEntry: "Creating time entry...",
+    startTimer: "Starting your timer...",
+    stopTimer: "Stopping your timer...",
+    getTimeEntries: "Retrieving your time entries...",
+    createTimeEntry: "Recording your time...",
     updateTimeEntry: "Updating time entry...",
-    deleteTimeEntry: "Deleting time entry...",
-    getProjects: "Fetching projects...",
+    deleteTimeEntry: "Removing time entry...",
+    getProjects: "Loading your projects...",
 
     // Operations tools
-    listInbox: "Checking inbox...",
-    getBalances: "Retrieving balances...",
-    listDocuments: "Fetching documents...",
-    exportData: "Exporting data...",
+    listInbox: "Checking your inbox...",
+    getBalances: "Retrieving your account balances...",
+    listDocuments: "Loading your documents...",
+    exportData: "Preparing your data export...",
 
     // Research tools
     webSearch: "Searching the web...",
 
     // Memory tools
-    updateWorkingMemory: "Updating memory...",
+    updateWorkingMemory: "Updating working memory...",
+
+    // Handoff tools
+    handoff_to_agent: "Connecting you with the right specialist...",
   };
 
   return toolMessages[toolName];

@@ -1,33 +1,19 @@
-# Financial Assistant Memory
+<user_profile>
+Name: [Learn from conversation]
+Role: [CEO, CFO, Finance Manager, etc.]
+</user_profile>
 
-## User Profile
-- Name: [Learn from conversation]
-- Role: [CEO, CFO, Finance Manager, Accountant, etc.]
-- Company Size: [Team size, annual revenue range if mentioned]
+<financial_focus>
+Key Metrics: [Revenue, burn rate, runway, cash flow, etc.]
+Recent Concerns: [Financial issues or questions mentioned]
+</financial_focus>
 
-## Financial Focus Areas
-- Key Metrics Being Tracked: [Revenue, burn rate, runway, cash flow, etc.]
-- Recent Reports Reviewed: [Which reports/metrics they've requested]
-- Concerning Areas: [Any financial concerns or red flags mentioned]
+<business_context>
+Industry: [If mentioned]
+Growth Stage: [Startup, Scale-up, Established]
+</business_context>
 
-## Business Context
-- Industry/Sector: [If mentioned]
-- Growth Stage: [Startup, Scale-up, Established, etc.]
-- Recent Business Events: [Fundraising, hiring, new product launch, etc.]
-
-## Preferences & Workflow
-- Reporting Style: [Detailed vs summary, visual vs tabular]
-- Frequency: [How often they check metrics - daily, weekly, monthly]
-- Time Periods: [Preferred date ranges for analysis]
-- Currency & Locale: [Managed by system, note if user mentions preferences]
-
-## Active Projects & Goals
-- Current Initiatives: [What they're working on]
-- Upcoming Deadlines: [Tax filing, investor reports, board meetings, etc.]
-- Questions to Follow Up On: [Unresolved items or things to monitor]
-
-## Interaction History
-- Communication Style: [Formal vs casual, technical vs simplified]
-- Recurring Questions: [Common queries to anticipate]
-- Learning Progress: [Topics explained, features introduced]
-
+<communication_preferences>
+Style: [Formal vs casual, technical vs simplified]
+Tone: [Professional, friendly, analytical, etc.]
+</communication_preferences>

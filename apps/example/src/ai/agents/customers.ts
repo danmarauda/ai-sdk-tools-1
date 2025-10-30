@@ -2,35 +2,35 @@ import { openai } from "@ai-sdk/openai";
 import {
   createCustomerTool,
   customerProfitabilityTool,
+  getCustomersTool,
   getCustomerTool,
   updateCustomerTool,
 } from "../tools/customers";
-import { createAgent, formatContextForLLM } from "./shared";
+import { COMMON_AGENT_RULES, createAgent, formatContextForLLM } from "./shared";
 
 export const customersAgent = createAgent({
   name: "customers",
   model: openai("gpt-4o-mini"),
+  temperature: 0.3,
   instructions: (
     ctx,
-  ) => `You are a customer management specialist for ${ctx.companyName}.
+  ) => `You are a customer management specialist for ${ctx.companyName}. Your goal is to help with customer data, profitability analysis, and customer relationship management.
 
-CRITICAL RULES:
-1. ALWAYS use tools to get/create/update customer data
-2. Present customer information clearly with key details
-3. Highlight profitability insights when analyzing customers
+<background-data>
+${formatContextForLLM(ctx)}
+</background-data>
 
-${formatContextForLLM(ctx)}`,
+${COMMON_AGENT_RULES}
+
+<agent-specific-rules>
+- Lead with key information
+</agent-specific-rules>`,
   tools: {
     getCustomer: getCustomerTool,
+    getCustomers: getCustomersTool,
     createCustomer: createCustomerTool,
     updateCustomer: updateCustomerTool,
     profitabilityAnalysis: customerProfitabilityTool,
   },
-  matchOn: [
-    "customer",
-    "client",
-    "customer profitability",
-    "customer analysis",
-  ],
   maxTurns: 5,
 });

@@ -1,24 +1,28 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { ShimmeringText } from "./shimmering-text";
+import type { IconComponent } from "@/lib/tool-config";
+import { TextShimmer } from "./shimmering-text";
 
-interface AnimatedStatusTextProps {
+interface AnimatedStatusProps {
   text: string | null;
   shimmerDuration?: number;
   className?: string;
   fadeDuration?: number;
   /** Animation variant for status changes */
   variant?: "fade" | "slide" | "scale" | "blur-fade";
+  /** Optional icon to display before the text */
+  icon?: IconComponent | null;
 }
 
-export function AnimatedStatusText({
+export function AnimatedStatus({
   text,
   shimmerDuration = 1,
   className,
   fadeDuration = 0.2,
   variant = "fade",
-}: AnimatedStatusTextProps) {
+  icon: Icon,
+}: AnimatedStatusProps) {
   // Animation variants for different effects
   const animations = {
     fade: {
@@ -46,8 +50,8 @@ export function AnimatedStatusText({
   const selectedAnimation = animations[variant];
 
   return (
-    <div className="relative">
-      <AnimatePresence mode="popLayout">
+    <div className="relative whitespace-nowrap h-8 flex items-center">
+      <AnimatePresence mode="wait">
         {text && (
           <motion.div
             key={text} // Re-mount when text changes to trigger animation
@@ -58,13 +62,12 @@ export function AnimatedStatusText({
               duration: fadeDuration,
               ease: "easeInOut",
             }}
+            className="flex items-center gap-1.5 text-muted-foreground dark:text-[#666666]"
           >
-            <ShimmeringText
-              text={text}
-              duration={shimmerDuration}
-              repeat={true}
-              className={className}
-            />
+            {Icon && <Icon className="h-3 w-3 shrink-0 text-current" />}
+            <TextShimmer className={className} duration={shimmerDuration}>
+              {text || ""}
+            </TextShimmer>
           </motion.div>
         )}
       </AnimatePresence>

@@ -10,43 +10,43 @@ import {
   spendingMetricsTool,
   taxSummaryTool,
 } from "../tools/reports";
-import { createAgent, formatContextForLLM } from "./shared";
+import { COMMON_AGENT_RULES, createAgent, formatContextForLLM } from "./shared";
 
 export const reportsAgent = createAgent({
   name: "reports",
   model: openai("gpt-4o-mini"),
+  temperature: 0.3,
   instructions: (
     ctx,
-  ) => `You are a financial reports specialist with access to live financial data.
+  ) => `You are a financial reports specialist for ${ctx.companyName}. Provide clear financial metrics and insights.
 
-YOUR SCOPE: Provide specific financial reports (revenue, P&L, cash flow, etc.)
-NOT YOUR SCOPE: Business health analysis, forecasting (those go to analytics specialist)
+<context>
+${formatContextForLLM(ctx)}
 
-CRITICAL RULES:
-1. ALWAYS use your tools to get data - NEVER ask the user for information you can retrieve
-2. Call tools IMMEDIATELY when asked for financial metrics
-3. Present results clearly after retrieving data
-4. For date ranges: "Q1 2024" = 2024-01-01 to 2024-03-31, "2024" = 2024-01-01 to 2024-12-31
-5. Answer ONLY what was asked - don't provide extra reports unless requested
+<date_reference>
+Q1: Jan-Mar | Q2: Apr-Jun | Q3: Jul-Sep | Q4: Oct-Dec
+</date_reference>
+</context>
 
-TOOL SELECTION GUIDE:
-- "runway" or "how long can we last" → Use runway tool
-- "burn rate" or "monthly burn" → Use burnRate tool
-- "revenue" or "income" → Use revenue tool
-- "P&L" or "profit" or "loss" → Use profitLoss tool
-- "cash flow" → Use cashFlow tool
-- "balance sheet" or "assets/liabilities" → Use balanceSheet tool
-- "expenses" or "spending breakdown" → Use expenses tool
-- "tax" → Use taxSummary tool
+${COMMON_AGENT_RULES}
 
-PRESENTATION STYLE:
-- Reference the company name (${ctx.companyName}) when providing insights
-- Use clear sections with headers for multiple metrics
-- Include status indicators (e.g., "Status: Healthy", "Warning", "Critical")
-- End with a brief key insight or takeaway when relevant
-- Be concise but complete - no unnecessary fluff
+<instructions>
+<guidelines>
+- Default to text responses, use artifacts only when requested
+- For "balance sheet report" requests, use the balanceSheet tool with useArtifact: true to show the canvas
+- For "balance sheet", "show me balance sheet" requests, use the balanceSheet tool to show the canvas
+- When providing text responses for financial data, mention that visual reports are available (e.g., "You can also ask for a visual balance sheet report")
+- Use only ONE tool per query - don't call multiple similar tools
+</guidelines>
 
-${formatContextForLLM(ctx)}`,
+<response_structure>
+Provide concise, natural financial reports with:
+- Key numbers and insights upfront
+- Brief analysis of what the data means
+- 1-2 actionable recommendations when relevant
+- Keep it conversational, not overly structured
+</response_structure>
+</instructions>`,
   tools: {
     revenue: revenueDashboardTool,
     profitLoss: profitLossTool,
@@ -58,20 +58,5 @@ ${formatContextForLLM(ctx)}`,
     spending: spendingMetricsTool,
     taxSummary: taxSummaryTool,
   },
-  matchOn: [
-    "revenue",
-    "profit",
-    "loss",
-    "p&l",
-    "runway",
-    "burn rate",
-    "expenses",
-    "spending",
-    "balance sheet",
-    "tax",
-    "financial report",
-    /burn.?rate/i,
-    /profit.*loss/i,
-  ],
   maxTurns: 5,
 });

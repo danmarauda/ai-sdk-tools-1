@@ -1,31 +1,38 @@
 import { openai } from "@ai-sdk/openai";
+import { listInvoicesTool } from "../tools/invoices";
 import {
   exportDataTool,
   getBalancesTool,
   listDocumentsTool,
   listInboxItemsTool,
 } from "../tools/operations";
-import { createAgent, formatContextForLLM } from "./shared";
+import { listTransactionsTool } from "../tools/transactions";
+import { COMMON_AGENT_RULES, createAgent, formatContextForLLM } from "./shared";
 
 export const operationsAgent = createAgent({
   name: "operations",
   model: openai("gpt-4o-mini"),
+  temperature: 0.3,
   instructions: (
     ctx,
-  ) => `You are an operations specialist for ${ctx.companyName}.
+  ) => `You are an operations specialist for ${ctx.companyName}. Provide account balances, documents, transactions, and invoices with specific data.
 
-CRITICAL RULES:
-1. ALWAYS use tools to get inbox items, documents, balances, or export data
-2. Present information clearly with counts and summaries
-3. Organize multiple items in clear lists or tables
+<background-data>
+${formatContextForLLM(ctx)}
+</background-data>
 
-${formatContextForLLM(ctx)}`,
+${COMMON_AGENT_RULES}
+
+<guidelines>
+- For direct queries: lead with results, add context
+</guidelines>`,
   tools: {
     listInbox: listInboxItemsTool,
     getBalances: getBalancesTool,
     listDocuments: listDocumentsTool,
     exportData: exportDataTool,
+    listTransactions: listTransactionsTool,
+    listInvoices: listInvoicesTool,
   },
-  matchOn: ["inbox", "document", "export", "balance", "account balance"],
   maxTurns: 5,
 });

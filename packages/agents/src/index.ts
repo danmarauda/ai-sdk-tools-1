@@ -20,6 +20,10 @@ export {
   createHandoff,
   createHandoffTool,
   isHandoffResult,
+  isHandoffTool,
+  HANDOFF_TOOL_NAME,
+  handoff,
+  getTransferMessage,
 } from "./handoff.js";
 // Permissions
 export {
@@ -29,6 +33,7 @@ export {
 } from "./permissions.js";
 // Routing
 export { findBestMatch, matchAgent } from "./routing.js";
+export { AgentRunContext } from "./run-context.js";
 // Streaming utilities
 export {
   writeAgentStatus,
@@ -46,8 +51,10 @@ export type {
   AgentStreamOptionsUI,
   AgentStreamResult,
   AgentUIMessage,
+  ConfiguredHandoff,
   ExtendedExecutionContext,
   GuardrailResult,
+  HandoffConfig,
   HandoffData,
   HandoffInstruction,
   InputGuardrail,
